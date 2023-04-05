@@ -1,6 +1,20 @@
 version: '3'
 
 services:
+
+  frontend:
+    build:
+      context: ./react-app
+      dockerfile: ./Dockerfile
+    image: react-app-frontend
+    ports:
+      - "8000:8000"
+    command: ["yarn", "dev"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`example.com`) && Path(`/`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=8000"
+
   account:
     build:
       context: ./account-service
@@ -13,9 +27,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.account.rule=Host(`api.example.com`) && PathPrefix(`/account`)"
       - "traefik.http.services.account.loadbalancer.server.port=3000"
-
-      # - "traefik.enable=true"
-      # - "traefik.http.routers.account.rule=Host(`example.com`) && PathPrefix(`/account`)"
       - "traefik.http.middlewares.account-stripprefix.stripprefix.prefixes=/account"
       - "traefik.http.routers.account.middlewares=account-stripprefix@docker"
 
@@ -29,8 +40,10 @@ services:
     command: ["yarn", "dev"]
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.catalog.rule=Host(`api.example.com`) && Path(`/`)"
+      - "traefik.http.routers.catalog.rule=Host(`api.example.com`) && Path(`/catalog`)"
       - "traefik.http.services.catalog.loadbalancer.server.port=3001"
+      - "traefik.http.middlewares.catalog-stripprefix.stripprefix.prefixes=/catalog"
+      - "traefik.http.routers.catalog.middlewares=catalog-stripprefix@docker"
 
   media:
     build:
@@ -40,6 +53,12 @@ services:
     ports:
       - "5002:3002"
     command: ["yarn", "dev"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.media.rule=Host(`api.example.com`) && PathPrefix(`/media`)"
+      - "traefik.http.services.media.loadbalancer.server.port=3002"
+      - "traefik.http.middlewares.media-stripprefix.stripprefix.prefixes=/media"
+      - "traefik.http.routers.media.middlewares=media-stripprefix@docker"
     
 networks:
   default:

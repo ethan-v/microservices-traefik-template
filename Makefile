@@ -26,9 +26,10 @@ verify-dev:
 	curl localhost:3002
 
 verify-traefik:
-	# curl -H Host:myhost.mydomain.org http://127.0.0.1/whoami
-	# curl -H Host:myhost.mydomain.org http://127.0.0.1/account/
-	curl http://example.com/whoami
+	curl http://example.com
+	curl http://api.example.com/account
+	curl http://api.example.com/catalog
+	curl http://api.example.com/media
 
 docker-ping-account:
 	docker compose exec -it account-service curl http://account-service:3000
