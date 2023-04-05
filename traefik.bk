@@ -10,6 +10,12 @@ http:
       # If the rule matches, forward to the whoami service (declared below)
       service: whoami
 
+      # Define a connection between requests and services
+    to-account:
+      rule: "Host(`example.com`) && PathPrefix(`/account/`)"
+      # If the rule matches, forward to the whoami service (declared below)
+      service: account
+
   middlewares:
     # Define an authentication mechanism
     test-user:
@@ -23,3 +29,9 @@ http:
       loadBalancer:
         servers:
         - url: http://private/whoami-service
+
+    # Define how to reach an existing service on our infrastructure
+    account:
+      loadBalancer:
+        servers:
+        - url: http://account-service:3000

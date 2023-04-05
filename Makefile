@@ -8,7 +8,7 @@ clean-infras:
 	docker compose -f docker-compose.infras.yml down -v
 
 start:
-	docker compose up -d --build
+	docker compose up -d
 
 stop:
 	docker compose down
@@ -26,7 +26,9 @@ verify-dev:
 	curl localhost:3002
 
 verify-traefik:
-	curl -H Host:myhost.mydomain.org http://127.0.0.1/whoami
-	curl -H Host:myhost.mydomain.org http://127.0.0.1/account/
+	# curl -H Host:myhost.mydomain.org http://127.0.0.1/whoami
+	# curl -H Host:myhost.mydomain.org http://127.0.0.1/account/
+	curl http://example.com/whoami
 
-
+docker-ping-account:
+	docker compose exec -it account-service curl http://account-service:3000
