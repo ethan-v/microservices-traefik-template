@@ -11,8 +11,13 @@ services:
     command: ["yarn", "dev"]
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.account.rule=Path(`/`)"
+      - "traefik.http.routers.account.rule=Host(`api.example.com`) && PathPrefix(`/account`)"
       - "traefik.http.services.account.loadbalancer.server.port=3000"
+
+      # - "traefik.enable=true"
+      # - "traefik.http.routers.account.rule=Host(`example.com`) && PathPrefix(`/account`)"
+      - "traefik.http.middlewares.account-stripprefix.stripprefix.prefixes=/account"
+      - "traefik.http.routers.account.middlewares=account-stripprefix@docker"
 
   catalog:
     build:
@@ -22,6 +27,10 @@ services:
     ports:
       - "5001:3001"
     command: ["yarn", "dev"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.catalog.rule=Host(`api.example.com`) && Path(`/`)"
+      - "traefik.http.services.catalog.loadbalancer.server.port=3001"
 
   media:
     build:
