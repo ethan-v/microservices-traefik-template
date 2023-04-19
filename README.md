@@ -16,3 +16,5 @@ Issues Notes:
       - "traefik.http.middlewares.catalog-stripprefix.stripprefix.prefixes=/catalog"
       - "traefik.http.routers.catalog.middlewares=catalog-stripprefix@docker"
     ```
+    
+ ## Testing
